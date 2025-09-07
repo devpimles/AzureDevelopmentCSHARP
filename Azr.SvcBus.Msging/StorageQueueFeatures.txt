@@ -1,0 +1,3 @@
+Your application must store over 80 gigabytes of messages in a queue.
+Your application wants to track progress for processing a message in the queue. It's useful if the worker processing a message crashes. Another worker can then use that information to continue from where the prior worker left off.
+You require server side logs of all of the transactions executed against your queues.

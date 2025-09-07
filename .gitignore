@@ -1,0 +1,64 @@
+# ---- General ----
+.DS_Store
+.log
+.user
+.suo
+.tmp
+.bak
+.ncb
+.swp
+
+# ---- Build output ----
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+[Bb]uild/
+[Ll]ogs/
+
+# ---- Visual Studio ----
+.vs
+.vcxproj.user
+.vscode
+
+# ---- Rider  JetBrains ----
+.idea
+
+# ---- NuGet ----
+.nupkg
+.snupkg
+.nuspec
+.psmdcp
+packages
+.nuget.props
+.nuget.targets
+
+# ---- Coverage & Testing ----
+.coverage
+.coveragexml
+.testsettings
+TestResults
+.trx
+
+# ---- Publish output ----
+.publish.xml
+publish
+.publishsettings
+
+# ---- Azure Artifacts ----
+.azurePubxml
+.azurePubxml.user
+.pubxml
+.pubxml.user
+
+# ---- Secrets ----
+#appsettings.json
+appsettings.*.json
+
+# ---- Others ----
+.dbmdl
+.bak
+.mdf
+.ldf
+.sqlite
