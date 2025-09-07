@@ -7,7 +7,7 @@ This repository demonstrates key Azure Service Bus messaging capabilities includ
 ## Infrastructure Overview
 
 Provisioned resources (via ARM templates in `/infra`)
-For details on provisioning and configuring the required Azure resources, see the [infra/README.md](/infra/README.md) file.
+For details on provisioning and configuring the required Azure resources, see the [infra/README.md](infra/README.md) file.
 
 ## A concise list of the Azure Service Bus features in this demo
 
