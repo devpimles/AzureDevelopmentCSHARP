@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnboardingAPI", "src\OnboardingAPI\OnboardingAPI.csproj", "{9735BE9A-DAF8-47CD-959B-98EECC164D3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAPIM", "src\ConsoleAPIM\ConsoleAPIM.csproj", "{B68DBB59-335A-4F59-97F0-B0716D96DF7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9735BE9A-DAF8-47CD-959B-98EECC164D3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9735BE9A-DAF8-47CD-959B-98EECC164D3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9735BE9A-DAF8-47CD-959B-98EECC164D3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9735BE9A-DAF8-47CD-959B-98EECC164D3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B68DBB59-335A-4F59-97F0-B0716D96DF7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B68DBB59-335A-4F59-97F0-B0716D96DF7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B68DBB59-335A-4F59-97F0-B0716D96DF7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B68DBB59-335A-4F59-97F0-B0716D96DF7C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16D52F77-A565-48CB-965E-EA64A83D555D}
+	EndGlobalSection
+EndGlobal
