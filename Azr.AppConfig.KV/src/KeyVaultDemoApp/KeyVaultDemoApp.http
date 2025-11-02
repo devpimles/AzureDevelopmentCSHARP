@@ -1,6 +1,0 @@
-@KeyVaultDemoApp_HostAddress = http://localhost:5291
-
-GET {{KeyVaultDemoApp_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

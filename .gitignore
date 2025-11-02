@@ -1,4 +1,6 @@
+# =========================================
 # ---- General ----
+# =========================================
 .DS_Store
 .log
 .user
@@ -8,7 +10,14 @@
 .ncb
 .swp
 
+# Ignore any .env or environment variable file anywhere in the repo
+**/.env
+**/.env.*
+!**/.env.example   # allow example templates to be tracked
+
+# =========================================
 # ---- Build output ----
+# =========================================
 [Bb]in/
 [Oo]bj/
 [Oo]ut/
@@ -17,46 +26,63 @@
 [Bb]uild/
 [Ll]ogs/
 
-# ---- Visual Studio ----
-.vs
+# =========================================
+# ---- Visual Studio / VS Code ----
+# =========================================
+.vs/
+.vscode/
 .vcxproj.user
-.vscode
 
-# ---- Rider  JetBrains ----
-.idea
+# =========================================
+# ---- JetBrains Rider ----
+# =========================================
+.idea/
 
+# =========================================
 # ---- NuGet ----
+# =========================================
 .nupkg
 .snupkg
 .nuspec
 .psmdcp
-packages
+packages/
 .nuget.props
 .nuget.targets
 
+# =========================================
 # ---- Coverage & Testing ----
+# =========================================
 .coverage
 .coveragexml
 .testsettings
-TestResults
+TestResults/
 .trx
 
+# =========================================
 # ---- Publish output ----
+# =========================================
 .publish.xml
-publish
+publish/
 .publishsettings
 
+# =========================================
 # ---- Azure Artifacts ----
+# =========================================
 .azurePubxml
 .azurePubxml.user
 .pubxml
 .pubxml.user
 
+# =========================================
 # ---- Secrets ----
-#appsettings.json
+# =========================================
+# Don’t commit environment-specific configs
 appsettings.*.json
+secrets.json
 
-# ---- Others ----
+# =========================================
+# ---- Database / Misc ----
+# =========================================
 .dbmdl
 .bak
 .mdf
