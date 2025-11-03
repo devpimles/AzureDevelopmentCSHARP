@@ -1,6 +1,7 @@
 set -e
 
-subscriptionId="b226cf84-8ea9-4c93-8fad-62a33fda6bc0"
+subscriptionId=$SUBSCRIPTION_ID
+printf "Using Subscription ID: %s\n" "$subscriptionId"
 resourceGroupName="rg-demo"
 location="westeurope"
 
@@ -22,6 +23,6 @@ az group create --name "$resourceGroupName" --location "$location" --output none
   --parameters \
       openAIKey="$OPENAI_API_KEY" \
       anthropicKey="$ANTHROPIC_API_KEY" \
-  # --what-if # Remove --what-if to actually deploy
+  --what-if # Remove --what-if to actually deploy
 
 az resource list --resource-group "$resourceGroupName" --output table
