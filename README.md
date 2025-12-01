@@ -1,18 +1,29 @@
-# Azure AI Foundry – Minimal Deployment
+# Projects
 
-This setup deploys a basic **Azure AI Foundry** environment using Bicep.  
-It creates a Foundry account, an associated Project, and an optional model deployment (`gpt-4o`).
+- [APIM](Azr.Apim/infra)
+-- Creates an API Management with rate limiting policy.
+- [AI Foundry](Azr.AIFoundry/infra)
+-- Creates an Foundry account, an associated Project, and an optional model deployment.
+- [App Configuration + Key Vault](Azr.AppConfig.KV/infra)
+-- Creates secure, hierarchical configuration management.
+- [Service Bus](Azr.SvcBus.Msging)
+-- Messaging Features Demo 
 
-[View Infrastructure](Azr.AIFoundry/infra)
 
-# Azure App Configuration + Key Vault – Secure Configuration Demo
+# Prerequisites
 
-This repository demonstrates **secure, hierarchical configuration management** in Azure using **Azure App Configuration** and **Azure Key Vault**, following Microsoft's recommended practices for cloud-native applications.
+- Azure Subscription 
+-- You must have access to an active Azure subscription where resources can be deployed.
+- Visual Studio Code
+-- Download: https://code.visualstudio.com/
+- Azure CLI
+-- https://learn.microsoft.com/cli/azure/install-azure-cli
 
-[View Infrastructure](Azr.AppConfig.KV/infra)
+### VS Code Extensions
 
-# Azure Service Bus - Messaging Features Demo 
-
-This repository demonstrates key Azure Service Bus messaging capabilities including topics, subscriptions, message routing with filters, queues, and common processing patterns using .NET 9. 
-
-[View Infrastructure](Azr.SvcBus.Msging)
+- Bicep
+-- Adds syntax highlighting, completions, errors, and ARM template previews.
+- PowerShell
+-- Required to run deploy.ps1 and support "Run Selection" with F8.
+- Azure CLI Tools (optional but recommended)
+-- Helps with CLI syntax and IntelliSense.

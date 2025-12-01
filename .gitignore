@@ -76,10 +76,23 @@ publish/
 # =========================================
 # ---- Secrets ----
 # =========================================
-# Don’t commit environment-specific configs
-appsettings.*.json
-secrets.json
+# Don't commit environment-specific configs or secrets anywhere
 
+# Ignore ALL appsettings.json variants in ANY folder
+**/appsettings.json
+**/appsettings.*.json
+!**/appsettings.example.json   # Allow safe templates
+
+# Ignore ALL secrets.json in ANY folder
+**/secrets.json
+
+# Ignore .NET user secrets folder (inside project root)
+**/.secret
+**/.secrets
+**/.vs/usersecrets
+
+# Visual Studio user secrets ID file
+**/UserSecrets/*.json
 # =========================================
 # ---- Database / Misc ----
 # =========================================
