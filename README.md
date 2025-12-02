@@ -1,5 +1,7 @@
 # Projects
 
+- [Application Insights + Log Analytics](Azr.AppInsights)
+-- Creates an Log Analytics Workspace and Application Insights.
 - [APIM](Azr.Apim/infra)
 -- Creates an API Management with rate limiting policy.
 - [AI Foundry](Azr.AIFoundry/infra)
