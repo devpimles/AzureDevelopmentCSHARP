@@ -38,7 +38,7 @@ resource workbook 'Microsoft.Insights/workbooks@2022-04-01' = if (enableWorkbook
   }
 }
 
-output id string = applicationInsights.id
-output name string = applicationInsights.name
-output connectionString string = applicationInsights.properties.ConnectionString
-output appId string = applicationInsights.properties.AppId
+output aiId string = applicationInsights.id
+output aiName string = applicationInsights.name
+output aiConnectionString string = applicationInsights.properties.ConnectionString
+output aiAppId string = applicationInsights.properties.AppId

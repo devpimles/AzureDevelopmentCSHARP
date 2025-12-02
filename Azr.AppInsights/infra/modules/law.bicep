@@ -12,7 +12,7 @@ resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   location: location
   properties: {
   publicNetworkAccessForIngestion: 'Enabled'
-  publicNetworkAccessForQuery: 'Disabled'
+  publicNetworkAccessForQuery: 'Enabled'
     retentionInDays: 30
     features: {
       searchVersion: 1
@@ -26,6 +26,6 @@ resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   }
 }
 
-output id string = logAnalytics.id
-output name string = logAnalytics.name
-output customerId string = logAnalytics.properties.customerId
+output lawId string = logAnalytics.id
+output lawName string = logAnalytics.name
+output lawCustomerId string = logAnalytics.properties.customerId

@@ -18,3 +18,11 @@ traces
 ```
 
 This structure allows you to group logs by execution, enrich events with contextual metadata, and explore custom dimensions in Application Insights.
+
+![Diagram](infra/img/ApplicationInsights-InProcces.png)
+
+## Infra
+
+- [Deployment files](infra)
+
+![Diagram](infra/img/ApplicationInsights-Image.png)

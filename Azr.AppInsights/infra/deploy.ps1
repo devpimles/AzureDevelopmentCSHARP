@@ -32,9 +32,11 @@ Write-Host "DEPLOY RESOURCE GROUP" -ForegroundColor Yellow
 az group create --name $resourceGroupName --location $location --output none
 
 Write-Host "DEPLOY RESOURCES" -ForegroundColor Yellow
-az deployment group create `
+$deploymentGroup = az deployment group create `
   --name $deploymentName `
   --resource-group $resourceGroupName `
   --template-file $templateFile `
   --parameters $parametersFile #`
   #--what-if
+
+Write-Host "AI Connection String: $($deploymentGroup.properties.outputs.aiConnectionString.value)" -ForegroundColor Yellow

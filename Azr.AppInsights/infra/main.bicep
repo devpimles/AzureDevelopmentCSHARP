@@ -23,6 +23,6 @@ module appInsightsModule './modules/appinsights.bicep' = {
   params: {
     suffix: suffix
     location: location
-    lawId: lawModule.outputs.id
+    lawId: lawModule.outputs.lawId
   }
 }

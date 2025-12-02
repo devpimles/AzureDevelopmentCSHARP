@@ -1,5 +1,7 @@
 # Resources
 
+![Diagram](img/ApplicationInsights-Image.png)
+
 - Log Analytics Workspace
 - Application Insights (other)
 

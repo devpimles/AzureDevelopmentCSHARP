@@ -48,4 +48,4 @@ catch (Exception ex)
 
 // Flush
 telemetry.Flush();
-await Task.Delay(5000);
+await Task.Delay(2000);
