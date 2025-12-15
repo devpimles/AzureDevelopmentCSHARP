@@ -49,7 +49,7 @@ module writerRoleAssignment './modules/group-role-assignment.bicep' = {
   }
 }
 
-output apiApplicationId string = apiApp.outputs.apiApplicationId
+output apiApplicationId string = apiApp.outputs.apiServicePrincipalId
 output clientApplicationId string = clientApp.outputs.clientApplicationId
 output readerGroupId string = readerGroup.outputs.groupId
 output writerGroupId string = writerGroup.outputs.groupId

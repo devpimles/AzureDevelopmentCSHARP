@@ -18,11 +18,11 @@ $tenantId          = $env:TENANT_ID
 $subscriptionId    = $env:SUBSCRIPTION_ID
 $resourceGroupName = "rg-dev-infra"
 
-$apiAppName        = "api-app-<SUFFIX>"
-$clientAppName     = "client-app-<SUFFIX>"
+$apiAppName        = "api-app-$($env:SUFFIX)"
+$clientAppName     = "client-app-$($env:SUFFIX)"
 
-$readerGroupName   = "grp-test-reader-<SUFFIX>"
-$writerGroupName   = "grp-test-writer-<SUFFIX>"
+$readerGroupName   = "grp-test-reader-$($env:SUFFIX)"
+$writerGroupName   = "grp-test-writer-$($env:SUFFIX)"
 
 $readerUserUpn     = "reader1@$($env:DOMAIN_NAME)"
 $writerUserUpn     = "writer1@$($env:DOMAIN_NAME)"
@@ -36,7 +36,11 @@ az account set --subscription $subscriptionId
 
 Connect-MgGraph `
   -TenantId $tenantId `
-  -Scopes "Application.ReadWrite.All","Directory.ReadWrite.All"
+  -Scopes `
+    "Application.ReadWrite.All",
+    "Group.ReadWrite.All",
+    "User.ReadWrite.All" `
+  -NoWelcome
 
 # ------------------------------
 # DELETE RESOURCE GROUP
@@ -68,13 +72,13 @@ if ($clientApp) {
 # DELETE GROUPS
 # ------------------------------
 
-$readerGroup = Get-MgGroup -Filter "displayName eq '$readerGroupName'"
+$readerGroup = Get-MgGroup -Filter "displayName eq '$readerGroupName'" -All | Select-Object -First 1
 if ($readerGroup) {
     Write-Host "Deleting Group: $readerGroupName" -ForegroundColor Red
     Remove-MgGroup -GroupId $readerGroup.Id -Confirm:$false
 }
 
-$writerGroup = Get-MgGroup -Filter "displayName eq '$writerGroupName'"
+$writerGroup = Get-MgGroup -Filter "displayName eq '$writerGroupName'" -All | Select-Object -First 1
 if ($writerGroup) {
     Write-Host "Deleting Group: $writerGroupName" -ForegroundColor Red
     Remove-MgGroup -GroupId $writerGroup.Id -Confirm:$false

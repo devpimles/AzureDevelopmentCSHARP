@@ -71,7 +71,7 @@ $users = @(
     }
 )
 
-. "$PSScriptRoot/create_user.ps1"
+. "$PSScriptRoot/scripts/create_user.ps1"
 
 $createdUsers = @{}
 
@@ -87,7 +87,7 @@ foreach ($u in $users) {
 
     Write-Host "Creating user: $($u.UPN)" -ForegroundColor Cyan
 
-    $user = New-EntraUser `
+    $user = Create-EntraUser `
         -DisplayName $u.DisplayName `
         -UserPrincipalName $u.UPN `
         -Password $u.Password

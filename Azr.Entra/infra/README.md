@@ -1,6 +1,8 @@
-# Entra ID OAuth2 Demo
+# Entra ID OAuth2 playground
 
 Provision Microsoft Entra ID (Azure AD) resources intended for controlled experimentation with OAuth 2.0 authentication flows, JWT-based authorization, delegated scopes, app roles, and group-based access management.
+
+![Diagram](img/Entra-Diagram.drawio.png)
 
 ## What Gets Deployed - Entra ID Objects
 

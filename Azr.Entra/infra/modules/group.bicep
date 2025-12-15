@@ -8,7 +8,7 @@ resource group 'Microsoft.Graph/groups@v1.0' = {
   mailEnabled: false
   mailNickname: uniqueString(name)
   securityEnabled: true
-  uniqueName: 'users_group_2025_12_09'
+  uniqueName: replace(toLower(name), '-', '_')
 }
 
 output groupName string = name
