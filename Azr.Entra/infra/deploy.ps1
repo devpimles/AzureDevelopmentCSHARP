@@ -1,44 +1,27 @@
 Set-Location $PSScriptRoot
-$envFile = Join-Path $PSScriptRoot ".env"
 
-Write-Host "Loading .env file..." -ForegroundColor Cyan
-if (Test-Path $envFile) {
-    Get-Content $envFile | ForEach-Object {
-        if ($_ -match "^\s*([^#=]+?)\s*=\s*(.+)$") {
-            Set-Item -Path "Env:$($matches[1].Trim())" -Value $matches[2].Trim()
-        }
-    }
-}
+. "$PSScriptRoot/scripts/Import-Env.ps1"
+Import-Env
 
-Write-Host "Subscription: $env:SUBSCRIPTION_ID" -ForegroundColor Yellow
-Write-Host "Tenant      : $env:TENANT_ID" -ForegroundColor Yellow
+$customerId = $env:CUSTOMER_ID #--------- FACILITATE SEARCH OF RESOURCES FOR EACH SPECIFIC CUSTOMER
+$environment = $env:ENVIRONMENT
+$location = $env:LOCATION
+$tenantId = $env:TENANT_ID
+$subscriptionId = $env:SUBSCRIPTION_ID
+$rg = "rg-$customerId-$environment"
+$templateFile = "main.bicep"
+$timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$deploymentName = "deploy-$customerId-$environment-$timestamp"
 
-$environment        = "dev"
-$tenantId           = $env:TENANT_ID
-$subscriptionId     = $env:SUBSCRIPTION_ID
-$resourceGroupName  = "rg-$environment-infra"
-$location           = "NorthEurope"
-$templateFile       = "main.bicep"
-$timestamp          = Get-Date -Format "yyyyMMdd-HHmmss"
-$deploymentName     = "proj-$environment-$timestamp"
+# DEPLOY
 
-# ---------- Azure CLI ----------
 az login --tenant $tenantId | Out-Null
 az account set --subscription $subscriptionId
-
-# ---------- Resource Group (idempotent) ----------
-Write-Host "Ensuring resource group exists..." -ForegroundColor Yellow
-az group create `
-  --name $resourceGroupName `
-  --location $location `
-  --output none
-
-# ---------- Deploy Infrastructure ----------
-Write-Host "Deploying infrastructure..." -ForegroundColor Yellow
-
+az group create --name $rg --location $location --output none
 $deploymentResult = az deployment group create `
   --name $deploymentName `
-  --resource-group $resourceGroupName `
+  --resource-group $rg `
+  --parameters customerId=$customerId environment=$environment `
   --template-file $templateFile `
   --query properties.outputs `
   --output json | ConvertFrom-Json
@@ -46,48 +29,43 @@ $deploymentResult = az deployment group create `
 $readerGroupId = $deploymentResult.readerGroupId.value
 $writerGroupId = $deploymentResult.writerGroupId.value
 
-Write-Host "Reader Group Id : $readerGroupId" -ForegroundColor Cyan
-Write-Host "Writer Group Id : $writerGroupId" -ForegroundColor Cyan
+# NEW USERS
 
-# ---------- Microsoft Graph ----------
-Connect-MgGraph `
-  -TenantId $tenantId `
-  -Scopes "User.ReadWrite.All","GroupMember.ReadWrite.All"
-
-# ---------- Users definition ----------
 $domainName = $env:DOMAIN_NAME
+$securePassword = ConvertTo-SecureString -String $env:INITIAL_NEW_USER_PASSWORD -AsPlainText -Force
+
 $users = @(
     @{
         DisplayName = "Test Reader User"
         UPN         = "reader1@$domainName"
-        Password    = "P@ssw0rd!123"
+        Password    = $securePassword
         Group       = "Reader"
     },
     @{
         DisplayName = "Test Writer User"
         UPN         = "writer1@$domainName"
-        Password    = "P@ssw0rd!123"
+        Password    = $securePassword
         Group       = "Writer"
     }
 )
 
-. "$PSScriptRoot/scripts/create_user.ps1"
+Connect-MgGraph `
+  -TenantId $tenantId `
+  -Scopes "User.ReadWrite.All","GroupMember.ReadWrite.All"
+
+. "$PSScriptRoot/scripts/New-EntraUser.ps1"
 
 $createdUsers = @{}
 
-# ---------- Create users (idempotent) ----------
 foreach ($u in $users) {
     $existingUser = Get-MgUser -Filter "userPrincipalName eq '$($u.UPN)'" -ErrorAction SilentlyContinue
 
     if ($existingUser) {
-        Write-Host "User already exists: $($u.UPN)" -ForegroundColor Yellow
         $createdUsers[$u.UPN] = $existingUser
         continue
     }
 
-    Write-Host "Creating user: $($u.UPN)" -ForegroundColor Cyan
-
-    $user = Create-EntraUser `
+    $user = New-EntraUser `
         -DisplayName $u.DisplayName `
         -UserPrincipalName $u.UPN `
         -Password $u.Password
@@ -95,7 +73,8 @@ foreach ($u in $users) {
     $createdUsers[$u.UPN] = $user
 }
 
-# ---------- Assign group membership (idempotent) ----------
+# MEMBERSHIPS
+
 foreach ($u in $users) {
     $userId = $createdUsers[$u.UPN].Id
 
@@ -110,15 +89,26 @@ foreach ($u in $users) {
         | Where-Object { $_.Id -eq $userId }
 
     if ($alreadyMember) {
-        Write-Host "User $($u.UPN) already in $($u.Group) group" -ForegroundColor Yellow
         continue
     }
 
     New-MgGroupMember `
         -GroupId $targetGroupId `
         -DirectoryObjectId $userId
-
-    Write-Host "Added $($u.UPN) to $($u.Group) group" -ForegroundColor Green
 }
 
-Write-Host "Deployment completed successfully." -ForegroundColor Green
+# INFO TO FILE
+
+$data = @{
+    customerId = $customerId
+    resourceGroupName = $rg
+    apiAppId = $ApiAppId
+    clientAppId = $ClientAppId
+    readerGroupId = $ReaderGroupId
+    writerGroupId = $WriterGroupId
+    readerUserId = $ReaderUserId
+    writerUserId = $WriterUserId
+}
+
+$deployOutputsPath = "$PSScriptRoot/Deploy_Outputs.json"
+$data | ConvertTo-Json -Depth 5 | Set-Content -Path $deployOutputsPath -Encoding UTF8

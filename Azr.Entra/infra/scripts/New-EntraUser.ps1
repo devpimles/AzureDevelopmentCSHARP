@@ -1,4 +1,4 @@
-function Create-EntraUser {
+function New-EntraUser {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
@@ -8,7 +8,7 @@ function Create-EntraUser {
         [string] $UserPrincipalName,
 
         [Parameter(Mandatory)]
-        [string] $Password,
+        [SecureString] $Password,
 
         [Parameter()]
         [bool] $ForceChangePasswordNextSignIn = $true

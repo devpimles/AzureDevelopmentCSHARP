@@ -1,15 +1,17 @@
 extension microsoftGraphV1 
 
-@description('The name of the group.')
-param name string
+param displayName string
+param uniqueName string
+param mailEnabled bool
+param mailNickname string
+param securityEnabled bool
 
 resource group 'Microsoft.Graph/groups@v1.0' = {
-  displayName: name
-  mailEnabled: false
-  mailNickname: uniqueString(name)
-  securityEnabled: true
-  uniqueName: replace(toLower(name), '-', '_')
+  displayName: displayName
+  uniqueName: uniqueName
+  mailEnabled: mailEnabled
+  mailNickname: mailNickname
+  securityEnabled: securityEnabled
 }
 
-output groupName string = name
 output groupId string = group.id

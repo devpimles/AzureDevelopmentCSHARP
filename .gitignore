@@ -86,6 +86,9 @@ publish/
 # Ignore ALL secrets.json in ANY folder
 **/secrets.json
 
+# Ignore ALL Deploy_Output_Ids.json in ANY folder
+**/Deploy_Output_Ids.json
+
 # Ignore .NET user secrets folder (inside project root)
 **/.secret
 **/.secrets

@@ -1,19 +1,16 @@
 extension microsoftGraphV1
 
-@description('The name of the api app')
 param name string
-
-var roleReaderId = guid('app-role-reader')
-var roleWriterId = guid('app-role-writer')
-
-var scopeReadId  = guid('scope-test-read')
-var scopeWriteId = guid('scope-test-write')
-
-var apiUri = 'api://${name}'
+param uniqueName string
+param roleReaderId string
+param roleWriterId string
+param scopeReadId string
+param scopeWriteId string
+param apiUri string
 
 resource apiApp 'Microsoft.Graph/applications@v1.0' = {
   displayName: name
-  uniqueName: '${name}-${tenant().tenantId}'
+  uniqueName: uniqueName
 
   identifierUris: [
     apiUri
@@ -79,13 +76,7 @@ resource apiAppSp 'Microsoft.Graph/servicePrincipals@v1.0' = {
   appId: apiApp.appId
 }
 
-output apiAppName string = name
 output apiApplicationId string = apiApp.appId
 output apiServicePrincipalId string = apiAppSp.id
-
 output roleReaderId string = roleReaderId
 output roleWriterId string = roleWriterId
-
-output scopeReadId string = scopeReadId
-output scopeWriteId string = scopeWriteId
-output apiAppUri string = apiUri

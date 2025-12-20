@@ -1,10 +1,13 @@
-# Resources
+## Structure
 
-## Entra ID
+```
+Azr.Entra/
+├── Azr.Entra.sln           # Solution file 
+├── ConsoleMsalNet/         # Implement interactive authentication with MSAL.NET 
+├── ConsoleGraph/           # Retrieve user profile information with the Microsoft Graph SDK 
+└── infra/                  # Deploy resources on Azure 
+```
 
-- App ID (Client ID)
-- API scopes (ex: api://<client-id>/read, write)
-- App Roles (optional)
-- Permissions for other applications (optional)
+## References 
 
 [Microsoft.Graph applications](https://learn.microsoft.com/en-us/graph/templates/bicep/reference/applications?view=graph-bicep-1.0)
