@@ -1,18 +1,24 @@
-function Import-Env {
+function Import-EnvFile {
     param (
-        [string]$Path = (Join-Path $PSScriptRoot "..\.env")
+        [Parameter(Mandatory)]
+        [string] $EnvFileName
     )
 
-    if (-not (Test-Path $Path)) {
-        Write-Warning "Env file not found: $Path"
-        return
+    $envPath = Join-Path $PSScriptRoot $EnvFileName
+
+    if (-not (Test-Path $envPath)) {
+        throw "Env file not found: $envPath"
     }
 
-    Get-Content $Path | ForEach-Object {
-        if ($_ -match "^\s*([^#=]+?)\s*=\s*(.+)$") {
-            $name  = $matches[1].Trim()
-            $value = $matches[2].Trim()
-            Set-Item -Path "Env:$name" -Value $value
+    Get-Content $envPath | ForEach-Object {
+        if ($_ -match '^\s*#' -or $_ -match '^\s*$') {
+            return
         }
+
+        $name, $value = $_ -split '=', 2
+        $name  = $name.Trim()
+        $value = $value.Trim()
+
+        [System.Environment]::SetEnvironmentVariable($name, $value, "Process")
     }
 }

@@ -1,17 +1,22 @@
 extension microsoftGraphV1 
 
-param displayName string
-param uniqueName string
-param mailEnabled bool
-param mailNickname string
-param securityEnabled bool
+param name string
+var mailNickName = toLower(
+  replace(
+    guid(customerId, name),
+    '-',
+    ''
+  )
+)
+param customerId string
 
 resource group 'Microsoft.Graph/groups@v1.0' = {
-  displayName: displayName
-  uniqueName: uniqueName
-  mailEnabled: mailEnabled
-  mailNickname: mailNickname
-  securityEnabled: securityEnabled
+  displayName: '${name}-${customerId}'
+  mailNickname: mailNickName
+  uniqueName: '${name}-${customerId}-${uniqueString(customerId)}'
+  securityEnabled: true
+  mailEnabled: false
 }
 
 output groupId string = group.id
+output mailNickName string = mailNickName

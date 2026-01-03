@@ -1,33 +1,40 @@
 Set-Location $PSScriptRoot
 
 . "$PSScriptRoot/scripts/Import-Env.ps1"
-Import-Env
+Import-Env ".env"
 
-$customerId = $env:CUSTOMER_ID #--------- FACILITATE SEARCH OF RESOURCES FOR EACH SPECIFIC CUSTOMER
+$customerId = $env:CUSTOMER_ID 
 $environment = $env:ENVIRONMENT
 $location = $env:LOCATION
 $tenantId = $env:TENANT_ID
 $subscriptionId = $env:SUBSCRIPTION_ID
 $rg = "rg-$customerId-$environment"
 $templateFile = "main.bicep"
-$timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
-$deploymentName = "deploy-$customerId-$environment-$timestamp"
+$parametersFile = "main.dev.bicepparam"
+$timeStamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$deploymentName = "deploy-$customerId-$environment-$timeStamp"
 
 # DEPLOY
 
 az login --tenant $tenantId | Out-Null
 az account set --subscription $subscriptionId
 az group create --name $rg --location $location --output none
-$deploymentResult = az deployment group create `
+
+az deployment group create `
   --name $deploymentName `
   --resource-group $rg `
-  --parameters customerId=$customerId environment=$environment `
+  --parameters $parametersFile `
   --template-file $templateFile `
+  --output none
+
+$deploymentShow = az deployment group show `
+  --resource-group $rg `
+  --name $deploymentName `
   --query properties.outputs `
   --output json | ConvertFrom-Json
 
-$readerGroupId = $deploymentResult.readerGroupId.value
-$writerGroupId = $deploymentResult.writerGroupId.value
+$readerGroupId = $deploymentShow.readerGroupId.value
+$writerGroupId = $deploymentShow.writerGroupId.value
 
 # NEW USERS
 
@@ -100,14 +107,17 @@ foreach ($u in $users) {
 # INFO TO FILE
 
 $data = @{
+    deploymentName = $deploymentName
     customerId = $customerId
     resourceGroupName = $rg
-    apiAppId = $ApiAppId
-    clientAppId = $ClientAppId
+    apiAppId = $deploymentShow.apiAppApplicationId.value
+    clientAppId = $deploymentShow.clientAppApplicationId.value
     readerGroupId = $ReaderGroupId
     writerGroupId = $WriterGroupId
-    readerUserId = $ReaderUserId
-    writerUserId = $WriterUserId
+    readerUserId = $createdUsers["reader1@$domainName"].Id
+    writerUserId = $createdUsers["writer1@$domainName"].Id
+    readerGroupMailNickName = $deploymentShow.readerGroupMailNickName.value
+    writerGroupMailNickName = $deploymentShow.writerGroupMailNickName.value
 }
 
 $deployOutputsPath = "$PSScriptRoot/Deploy_Outputs.json"

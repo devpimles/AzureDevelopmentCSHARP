@@ -1,48 +1,38 @@
 type EnvironmentConfigType = {
   appApi: {
     name: string
-    uniqueName: string
-    roleReaderId: string
-    roleWriterId: string
-    scopeReadId: string
-    scopeWriteId: string
     apiUri: string
   }
-  appclient: {
+  appClient: {
     name: string
-    uniqueName: string
     redirectUris: array 
     apiServicePrincipalId: string
-    apiScopeReadId: string
-    apiScopeWriteId: string
   }
   groupReader: {
-    displayName: string
-    uniqueName: string
-    mailEnabled: bool
-    mailNickname: string
-    securityEnabled: bool
+    name: string
   }
   groupWriter: {
-    displayName: string
-    uniqueName: string
-    mailEnabled: bool
-    mailNickname: string
-    securityEnabled: bool
+    name: string
   }
 }
 
+param customerId string
 param EnvironmentConfig EnvironmentConfigType
+
+var roleReaderId = guid(customerId, 'role-reader')
+var roleWriterId = guid(customerId, 'role-writer')
+var scopeReadId  = guid(customerId, 'scope-read')
+var scopeWriteId = guid(customerId, 'scope-write')
 
 module apiApp './modules/api-app.bicep' = {
   name: 'apiApp'
   params: {
+    customerId: customerId
     name: EnvironmentConfig.appApi.name
-    uniqueName: EnvironmentConfig.appApi.uniqueName
-    roleReaderId: EnvironmentConfig.appApi.roleReaderId
-    roleWriterId: EnvironmentConfig.appApi.roleWriterId
-    scopeReadId: EnvironmentConfig.appApi.scopeReadId
-    scopeWriteId: EnvironmentConfig.appApi.scopeWriteId
+    roleReaderId: roleReaderId
+    roleWriterId: roleWriterId
+    scopeReadId: scopeReadId
+    scopeWriteId: scopeWriteId
     apiUri: EnvironmentConfig.appApi.apiUri
   }
 }
@@ -50,34 +40,28 @@ module apiApp './modules/api-app.bicep' = {
 module clientApp './modules/client-app.bicep' = {
   name: 'clientApp'
   params: {
-    name: EnvironmentConfig.appclient.name
-    uniqueName: EnvironmentConfig.appclient.uniqueName
-    redirectUris: EnvironmentConfig.appclient.redirectUris
-    apiServicePrincipalId: apiApp.outputs.apiServicePrincipalId
-    apiScopeReadId: EnvironmentConfig.appclient.apiScopeReadId
-    apiScopeWriteId: EnvironmentConfig.appclient.apiScopeWriteId
+    customerId: customerId
+    name: EnvironmentConfig.appClient.name
+    redirectUris: EnvironmentConfig.appClient.redirectUris
+    apiServicePrincipalId: apiApp.outputs.apiAppServicePrincipalId
+    scopeReadId: scopeReadId
+    scopeWriteId: scopeWriteId
   }
 }
 
 module readerGroup './modules/group.bicep' = {
   name: 'readerGroup'
   params: {
-    displayName: EnvironmentConfig.groupReader.displayName
-    uniqueName: EnvironmentConfig.groupReader.uniqueName
-    mailEnabled: EnvironmentConfig.groupReader.mailEnabled
-    mailNickname: EnvironmentConfig.groupReader.mailNickname
-    securityEnabled: EnvironmentConfig.groupReader.securityEnabled
+    customerId: customerId
+    name: EnvironmentConfig.groupReader.name
   }
 }
 
 module writerGroup './modules/group.bicep' = {
   name: 'writerGroup'
   params: {
-    displayName: EnvironmentConfig.groupWriter.displayName
-    uniqueName: EnvironmentConfig.groupWriter.uniqueName
-    mailEnabled: EnvironmentConfig.groupWriter.mailEnabled
-    mailNickname: EnvironmentConfig.groupWriter.mailNickname
-    securityEnabled: EnvironmentConfig.groupWriter.securityEnabled
+    customerId: customerId
+    name: EnvironmentConfig.groupWriter.name
   }
 }
 
@@ -85,8 +69,8 @@ module readerRoleAssignment './modules/group-role-assignment.bicep' = {
   name: 'readerRoleAssignment'
   params: {
     audienceId: readerGroup.outputs.groupId
-    resourceId: apiApp.outputs.apiServicePrincipalId
-    roleId: apiApp.outputs.roleReaderId
+    resourceId: apiApp.outputs.apiAppServicePrincipalId
+    roleId: roleReaderId
   }
 }
 
@@ -94,7 +78,17 @@ module writerRoleAssignment './modules/group-role-assignment.bicep' = {
   name: 'writerRoleAssignment'
   params: {
     audienceId: writerGroup.outputs.groupId
-    resourceId: apiApp.outputs.apiServicePrincipalId
-    roleId: apiApp.outputs.roleWriterId
+    resourceId: apiApp.outputs.apiAppServicePrincipalId
+    roleId: roleWriterId
   }
 }
+
+output readerGroupId string = readerGroup.outputs.groupId
+output writerGroupId string = writerGroup.outputs.groupId
+output apiAppServicePrincipalId string = apiApp.outputs.apiAppServicePrincipalId
+output apiAppApplicationId string = apiApp.outputs.apiAppApplicationId
+output clientAppServicePrincipalId string = clientApp.outputs.clientAppServicePrincipalId
+output clientAppApplicationId string = clientApp.outputs.clientAppApplicationId
+output readerGroupMailNickName string = readerGroup.outputs.mailNickName
+output writerGroupMailNickName string = writerGroup.outputs.mailNickName
+

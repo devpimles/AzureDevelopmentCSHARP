@@ -1,16 +1,16 @@
 extension microsoftGraphV1
 
-
 param name string
-param uniqueName string
 param redirectUris array 
 param apiServicePrincipalId string
-param apiScopeReadId string
-param apiScopeWriteId string
+param scopeReadId string
+param scopeWriteId string
+
+param customerId string
 
 resource clientApp 'Microsoft.Graph/applications@v1.0' = {
-  displayName: name
-  uniqueName: uniqueName
+  displayName: '${name}-${customerId}'
+  uniqueName: '${name}-${customerId}-${uniqueString(customerId)}'
   isFallbackPublicClient: true
 
   publicClient: {
@@ -22,11 +22,11 @@ resource clientApp 'Microsoft.Graph/applications@v1.0' = {
       resourceAppId: apiServicePrincipalId
       resourceAccess: [
         {
-          id: apiScopeReadId
+          id: scopeReadId
           type: 'Scope'
         }
         {
-          id: apiScopeWriteId
+          id: scopeWriteId
           type: 'Scope'
         }
       ]
@@ -37,9 +37,9 @@ resource clientApp 'Microsoft.Graph/applications@v1.0' = {
   spa: null
 }
 
-resource clientSp 'Microsoft.Graph/servicePrincipals@v1.0' = {
+resource clientAppSp 'Microsoft.Graph/servicePrincipals@v1.0' = {
   appId: clientApp.appId
 }
 
-output clientApplicationId string = clientApp.appId
-output clientServicePrincipalId string = clientSp.id
+output clientAppApplicationId string = clientApp.appId
+output clientAppServicePrincipalId string = clientAppSp.id
