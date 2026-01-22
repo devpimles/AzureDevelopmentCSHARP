@@ -1,4 +1,4 @@
-function Import-EnvFile {
+function Import-Env  {
     param (
         [Parameter(Mandatory)]
         [string] $EnvFileName

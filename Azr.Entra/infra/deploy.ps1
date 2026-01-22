@@ -1,7 +1,7 @@
 Set-Location $PSScriptRoot
 
 . "$PSScriptRoot/scripts/Import-Env.ps1"
-Import-Env ".env"
+Import-Env "../.env"
 
 $customerId = $env:CUSTOMER_ID 
 $environment = $env:ENVIRONMENT

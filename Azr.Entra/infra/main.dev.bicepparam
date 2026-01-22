@@ -6,7 +6,7 @@ param EnvironmentConfig = {
     apiUri: 'api://localhost'
   }
   appClient: {
-    name: 'app-api'
+    name: 'app-client'
     redirectUris: [
       'http://localhost'
     ]
