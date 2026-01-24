@@ -110,12 +110,23 @@ $data = @{
     deploymentName = $deploymentName
     customerId = $customerId
     resourceGroupName = $rg
-    apiAppId = $deploymentShow.apiAppApplicationId.value
-    clientAppId = $deploymentShow.clientAppApplicationId.value
+    
+    apiAppClientId = $deploymentShow.apiAppClientId.value
+    apiAppObjectId = $deploymentShow.apiAppObjectId.value
+    apiAppSPId = $deploymentShow.apiAppSPId.value
+
+    clientAppClientId = $deploymentShow.clientAppClientId.value
+    clientAppObjectId = $deploymentShow.clientAppObjectId.value
+    clientAppSPId = $deploymentShow.clientAppSPId.value
+    
     readerGroupId = $ReaderGroupId
+    readerGroupObjectId = $ReaderGroupId #NEW
     writerGroupId = $WriterGroupId
+    writerGroupObjectId = $WriterGroupId #NEW
     readerUserId = $createdUsers["reader1@$domainName"].Id
+    readerUserObjectId = $createdUsers["reader1@$domainName"].Id #NEW
     writerUserId = $createdUsers["writer1@$domainName"].Id
+    writerUserObjectId = $createdUsers["writer1@$domainName"].Id #NEW
     readerGroupMailNickName = $deploymentShow.readerGroupMailNickName.value
     writerGroupMailNickName = $deploymentShow.writerGroupMailNickName.value
 }

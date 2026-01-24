@@ -76,7 +76,8 @@ resource apiAppSp 'Microsoft.Graph/servicePrincipals@v1.0' = {
   appId: apiApp.appId
 }
 
-output apiAppApplicationId string = apiApp.appId
-output apiAppServicePrincipalId string = apiAppSp.id
+output apiAppClientId string = apiApp.appId
+output apiAppObjectId string = apiApp.id
+output apiAppSPId string = apiAppSp.id
 output roleReaderId string = roleReaderId
 output roleWriterId string = roleWriterId

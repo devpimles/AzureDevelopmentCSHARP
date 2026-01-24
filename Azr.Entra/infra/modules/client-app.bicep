@@ -41,5 +41,6 @@ resource clientAppSp 'Microsoft.Graph/servicePrincipals@v1.0' = {
   appId: clientApp.appId
 }
 
-output clientAppApplicationId string = clientApp.appId
-output clientAppServicePrincipalId string = clientAppSp.id
+output clientAppClientId string = clientApp.appId
+output clientAppObjectId string = clientApp.id
+output clientAppSPId string = clientAppSp.id

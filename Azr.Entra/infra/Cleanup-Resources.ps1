@@ -3,7 +3,7 @@ Set-Location $PSScriptRoot
 $deployOutputs = Get-Content "$PSScriptRoot/Deploy_Outputs.json" | ConvertFrom-Json
 
 . "$PSScriptRoot/scripts/Import-Env.ps1"
-Import-Env
+Import-Env "../.env"
 
 $environment = $env:ENVIRONMENT
 $tenantId = $env:TENANT_ID

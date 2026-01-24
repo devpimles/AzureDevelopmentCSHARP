@@ -11,7 +11,7 @@ function New-EntraUser {
         [SecureString] $Password,
 
         [Parameter()]
-        [bool] $ForceChangePasswordNextSignIn = $true
+        [bool] $ForceChangePasswordNextSignIn = $false
     )
 
     Write-Host "Creating Entra user: $UserPrincipalName" -ForegroundColor Cyan
