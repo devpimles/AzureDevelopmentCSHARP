@@ -1,0 +1,49 @@
+name: 📚 Documentation / Learning
+description: Architecture docs, decisions, exam notes
+title: "[DOCS] "
+labels:
+  - docs
+assignees:
+  - devpimles
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Documentation Task
+        Use this for knowledge capture, architecture, and AZ-204 study artifacts.
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      placeholder: e.g. Document why Container Apps were chosen over App Service
+    validations:
+      required: true
+
+  - type: textarea
+    id: content
+    attributes:
+      label: Content to Produce
+      placeholder: |
+        - Markdown doc
+        - Diagram
+        - Comparison table
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Location in Repo
+      placeholder: e.g. /docs/architecture/container-apps.md
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: az204
+    attributes:
+      label: AZ-204 Relevance
+      options:
+        - label: Helps exam recall
+        - label: Explains trade-offs
+        - label: Captures decision rationale

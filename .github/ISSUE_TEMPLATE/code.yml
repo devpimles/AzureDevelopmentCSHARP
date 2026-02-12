@@ -1,0 +1,64 @@
+name: 💻 Application Code
+description: Implement or modify application logic
+title: "[CODE] "
+labels:
+  - code
+assignees:
+  - devpimles
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Application Code Task
+        Use this template for .NET APIs, Azure Functions, auth, messaging, or integrations.
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What behavior or Azure integration is being implemented?
+      placeholder: e.g. Send Service Bus message using managed identity
+    validations:
+      required: true
+
+  - type: textarea
+    id: components
+    attributes:
+      label: Components Affected
+      placeholder: |
+        - API
+        - Azure Function
+        - Service Bus
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation Notes
+      description: Key design decisions or constraints
+      placeholder: |
+        - Use DefaultAzureCredential
+        - No connection strings
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation Steps
+      placeholder: |
+        - Local run succeeds
+        - Azure deployed version works
+        - Logs visible in App Insights
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: nonfunctional
+    attributes:
+      label: Non-functional Requirements
+      options:
+        - label: Secure (no secrets)
+        - label: Observable
+        - label: Retry / resilience

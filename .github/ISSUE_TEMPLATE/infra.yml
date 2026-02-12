@@ -1,0 +1,66 @@
+name: 🏗️ Infrastructure (Azure / IaC)
+description: Provision or modify Azure infrastructure using Bicep / ARM
+title: "[INFRA] "
+labels:
+  - infra
+assignees:
+  - devpimles
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Infrastructure Task
+        Use this template for Azure resources, networking, identity, monitoring, or IaC work.
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What Azure capability or AZ-204 objective does this implement?
+      placeholder: e.g. Deploy Azure Container App with managed identity
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What resources will be created or modified?
+      placeholder: |
+        - Azure Container App
+        - Log Analytics
+        - Managed Identity
+    validations:
+      required: true
+
+  - type: textarea
+    id: iac
+    attributes:
+      label: Infrastructure as Code
+      description: Where will the IaC live?
+      placeholder: e.g. /infra/container-app/main.bicep
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: When is this issue DONE?
+      placeholder: |
+        - Deployment succeeds from CLI / pipeline
+        - Resource visible in Azure Portal
+        - No manual steps required
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: az204
+    attributes:
+      label: AZ-204 Coverage
+      options:
+        - label: Compute
+        - label: Storage
+        - label: Security
+        - label: Integration
+        - label: Monitoring
