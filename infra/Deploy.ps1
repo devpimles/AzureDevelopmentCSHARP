@@ -25,6 +25,8 @@ $deploymentName = "deploy-$environment-$timeStamp"
 # Parameters
 $logAnalyticsWorkspaceName     = "law-shared-$environment"
 $containerAppsEnvironmentName = "aca-env-$environment"
+$containerAppName  = "api-$environment"
+$containerImage   = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
 
 # -------- Azure Login --------
 az login --tenant $tenantId | Out-Null
@@ -45,4 +47,6 @@ az deployment group create `
       location=$location `
       logAnalyticsWorkspaceName=$logAnalyticsWorkspaceName `
       containerAppsEnvironmentName=$containerAppsEnvironmentName `
+      containerAppName=$containerAppName `
+      containerImage=$containerImage `
   --output none
