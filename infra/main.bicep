@@ -50,3 +50,6 @@ output containerAppsEnvironmentId string = containerAppsEnv.outputs.environmentI
 
 @description('Containner App Id')
 output containerAppId string = containerAppApi.outputs.containerAppId
+
+@description('Containner App PrincipalId')
+output containerAppPrincipalId string = containerAppApi.outputs.containerAppPrincipalId

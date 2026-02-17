@@ -26,6 +26,11 @@ This is:
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: appName
   location: location
+
+  identity: {
+    type: 'SystemAssigned'
+  }
+
   properties: {
     managedEnvironmentId: managedEnvironmentId
 
@@ -44,7 +49,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     }
 
     template: {
-      revisionSuffix: 'v2'
+      revisionSuffix: 'v3'
       containers: [
         {
           name: appName
@@ -65,3 +70,6 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
 
 @description('Containner App Id')
 output containerAppId string = containerApp.id
+
+@description('Containner App PrincipalId')
+output containerAppPrincipalId string = containerApp.identity.principalId
