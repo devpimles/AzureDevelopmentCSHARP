@@ -35,6 +35,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     managedEnvironmentId: managedEnvironmentId
 
     configuration: {
+      activeRevisionsMode: 'Single'
       ingress: {
         external: false
         targetPort: targetPort
@@ -49,7 +50,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     }
 
     template: {
-      revisionSuffix: 'v3'
+      revisionSuffix: 'v4'
       containers: [
         {
           name: appName
