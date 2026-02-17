@@ -13,6 +13,8 @@ param containerAppName string = 'api-dev'
 @description('Container image')
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
+@description('Name of the Azure Container Registry')
+param acrName string = 'acr-dev'
 
 module logAnalytics './modules/loganalytics.bicep' = {
   name: 'logAnalytics'
@@ -42,6 +44,30 @@ module containerAppApi './modules/containerapp-api.bicep' = {
   }
 }
 
+module acr './modules/acr.bicep' = {
+  name: 'acr'
+  params: {
+    acrName: acrName
+    location: location
+  }
+}
+
+resource acrExisting 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
+  name: acrName
+}
+
+resource acrPullAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerAppName, acrExisting.id, 'acrpull')
+  scope: acrExisting
+  properties: {
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '7f951dda-4ed3-4680-a7ca-43fe172d538d' // AcrPull
+    )
+    principalId: containerAppApi.outputs.containerAppPrincipalId
+  }
+}
+
 @description('Log Analytics resource ID')
 output logAnalyticsId string = logAnalytics.outputs.logAnalyticsId
 
@@ -53,3 +79,9 @@ output containerAppId string = containerAppApi.outputs.containerAppId
 
 @description('Containner App PrincipalId')
 output containerAppPrincipalId string = containerAppApi.outputs.containerAppPrincipalId
+
+@description('ACR resource ID')
+output acrId string = acr.outputs.acrId
+
+@description('ACR login server (e.g. myacr.azurecr.io)')
+output acrLoginServer string = acr.outputs.acrLoginServer

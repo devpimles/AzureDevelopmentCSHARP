@@ -23,10 +23,11 @@ $timeStamp      = Get-Date -Format "yyyyMMdd-HHmmss"
 $deploymentName = "deploy-$environment-$timeStamp"
 
 # Parameters
-$logAnalyticsWorkspaceName     = "law-shared-$environment"
+$logAnalyticsWorkspaceName = "law-shared-$environment"
 $containerAppsEnvironmentName = "aca-env-$environment"
-$containerAppName  = "api-$environment"
-$containerImage   = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+$containerAppName = "api-$environment"
+$containerImage = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+$acrName = "acrcalmstone$environment"
 
 # -------- Azure Login --------
 az login --tenant $tenantId | Out-Null
@@ -49,4 +50,5 @@ az deployment group create `
       containerAppsEnvironmentName=$containerAppsEnvironmentName `
       containerAppName=$containerAppName `
       containerImage=$containerImage `
+      acrName=$acrName `
   --output none
