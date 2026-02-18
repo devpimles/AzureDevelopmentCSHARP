@@ -16,6 +16,9 @@ param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-hellowo
 @description('Name of the Azure Container Registry')
 param acrName string = 'acr-dev'
 
+@description('Application Insights name')
+param appInsightsName string = 'appi-dev'
+
 module logAnalytics './modules/loganalytics.bicep' = {
   name: 'logAnalytics'
   params: {
@@ -68,6 +71,15 @@ resource acrPullAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' 
   }
 }
 
+module appInsights './modules/appinsights.bicep' = {
+  name: 'appInsights'
+  params: {
+    appInsightsName: appInsightsName
+    location: location
+    logAnalyticsWorkspaceId: logAnalytics.outputs.logAnalyticsId
+  }
+}
+
 @description('Log Analytics resource ID')
 output logAnalyticsId string = logAnalytics.outputs.logAnalyticsId
 
@@ -85,3 +97,9 @@ output acrId string = acr.outputs.acrId
 
 @description('ACR login server (e.g. myacr.azurecr.io)')
 output acrLoginServer string = acr.outputs.acrLoginServer
+
+@description('Application Insights connection string')
+output appInsightsConnectionString string = appInsights.outputs.appInsightsConnectionString
+
+@description('Application Insights instrumentation key')
+output appInsightsInstrumentationKey string = appInsights.outputs.appInsightsInstrumentationKey

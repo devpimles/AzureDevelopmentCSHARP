@@ -28,6 +28,7 @@ $containerAppsEnvironmentName = "aca-env-$environment"
 $containerAppName = "api-$environment"
 $containerImage = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
 $acrName = "acrcalmstone$environment"
+$appInsightsName = "appi-$environment"
 
 # -------- Azure Login --------
 az login --tenant $tenantId | Out-Null
@@ -51,4 +52,5 @@ az deployment group create `
       containerAppName=$containerAppName `
       containerImage=$containerImage `
       acrName=$acrName `
+      appInsightsName=$appInsightsName `
   --output none
