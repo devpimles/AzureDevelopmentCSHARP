@@ -14,9 +14,6 @@ param location string
 ])
 param sku string = 'Standard'
 
-@description('Enable admin user (should be false when using Managed Identity)')
-param adminUserEnabled bool = false
-
 resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: acrName
   location: location
@@ -24,7 +21,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
     name: sku
   }
   properties: {
-    adminUserEnabled: adminUserEnabled
+    adminUserEnabled: true
     publicNetworkAccess: 'Enabled'
   }
 }
