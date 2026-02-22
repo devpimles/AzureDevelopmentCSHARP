@@ -4,6 +4,15 @@ param location string = resourceGroup().location
 @description('Shared Log Analytics workspace name')
 param logAnalyticsWorkspaceName string = 'law-shared-dev'
 
+@description('Application Insights name')
+param appInsightsName string = 'appi-dev'
+
+@description('Container App name')
+param uamiApiName string = 'uami-api-dev'
+
+@description('Name of the Azure Container Registry')
+param acrName string = 'acr-dev'
+
 @description('Container Apps environment name')
 param containerAppsEnvironmentName string = 'aca-env-dev'
 
@@ -13,11 +22,8 @@ param containerAppName string = 'api-dev'
 @description('Container image')
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
-@description('Name of the Azure Container Registry')
-param acrName string = 'acr-dev'
-
-@description('Application Insights name')
-param appInsightsName string = 'appi-dev'
+@description('Container revision')
+param containerRevision string = '0-1-0'
 
 module logAnalytics './modules/loganalytics.bicep' = {
   name: 'logAnalytics'
@@ -27,23 +33,20 @@ module logAnalytics './modules/loganalytics.bicep' = {
   }
 }
 
-module containerAppsEnv './modules/containerapps-env.bicep' = {
-  name: 'containerAppsEnv'
+module appInsights './modules/appinsights.bicep' = {
+  name: 'appInsights'
   params: {
+    appInsightsName: appInsightsName
     location: location
-    environmentName: containerAppsEnvironmentName
-    logAnalyticsCustomerId: logAnalytics.outputs.workspaceCustomerId
-    logAnalyticsSharedKey: logAnalytics.outputs.primarySharedKey
+    logAnalyticsWorkspaceId: logAnalytics.outputs.logAnalyticsId
   }
 }
 
-module containerAppApi './modules/containerapp-api.bicep' = {
-  name: 'containerAppApi'
+module uamiApi './modules/identity/uami-api.bicep' = {
+  name: 'uamiApi'
   params: {
-    appName: containerAppName
+    uamiApiName: uamiApiName
     location: location
-    managedEnvironmentId: containerAppsEnv.outputs.environmentId
-    image: containerImage
   }
 }
 
@@ -60,46 +63,44 @@ resource acrExisting 'Microsoft.ContainerRegistry/registries@2023-07-01' existin
 }
 
 resource acrPullAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(containerAppName, acrExisting.id, 'acrpull')
+  name: guid(uamiApiName, acrExisting.id, 'acrpull')
+  dependsOn: [
+    acr
+  ]
   scope: acrExisting
   properties: {
     roleDefinitionId: subscriptionResourceId(
       'Microsoft.Authorization/roleDefinitions',
-      '7f951dda-4ed3-4680-a7ca-43fe172d538d' // AcrPull
+      '7f951dda-4ed3-4680-a7ca-43fe172d538d'
     )
-    principalId: containerAppApi.outputs.containerAppPrincipalId
+    principalId: uamiApi.outputs.uamiApiPrincipalId
+    principalType: 'ServicePrincipal'
   }
 }
 
-module appInsights './modules/appinsights.bicep' = {
-  name: 'appInsights'
+module containerAppsEnv './modules/containerapps-env.bicep' = {
+  name: 'containerAppsEnv'
   params: {
-    appInsightsName: appInsightsName
     location: location
-    logAnalyticsWorkspaceId: logAnalytics.outputs.logAnalyticsId
+    environmentName: containerAppsEnvironmentName
+    logAnalyticsCustomerId: logAnalytics.outputs.workspaceCustomerId
+    logAnalyticsSharedKey: logAnalytics.outputs.primarySharedKey
   }
 }
 
-@description('Log Analytics resource ID')
-output logAnalyticsId string = logAnalytics.outputs.logAnalyticsId
-
-@description('Container Apps Environment ID')
-output containerAppsEnvironmentId string = containerAppsEnv.outputs.environmentId
-
-@description('Containner App Id')
-output containerAppId string = containerAppApi.outputs.containerAppId
-
-@description('Containner App PrincipalId')
-output containerAppPrincipalId string = containerAppApi.outputs.containerAppPrincipalId
-
-@description('ACR resource ID')
-output acrId string = acr.outputs.acrId
-
-@description('ACR login server (e.g. myacr.azurecr.io)')
-output acrLoginServer string = acr.outputs.acrLoginServer
-
-@description('Application Insights connection string')
-output appInsightsConnectionString string = appInsights.outputs.appInsightsConnectionString
-
-@description('Application Insights instrumentation key')
-output appInsightsInstrumentationKey string = appInsights.outputs.appInsightsInstrumentationKey
+module containerAppApi './modules/containerapp-api.bicep' = {
+  name: 'containerAppApi'
+    dependsOn: [
+    acrPullAssignment
+  ]
+  params: {
+    appName: containerAppName
+    location: location
+    managedEnvironmentId: containerAppsEnv.outputs.environmentId
+    image: containerImage
+    uamiId: uamiApi.outputs.uamiApiId
+    acrLoginServer: acr.outputs.acrLoginServer
+    appInsightsConnectionString: appInsights.outputs.appInsightsConnectionString
+    containerRevision: containerRevision
+  }
+}

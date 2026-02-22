@@ -25,8 +25,10 @@ $deploymentName = "deploy-$environment-$timeStamp"
 # Parameters
 $logAnalyticsWorkspaceName = "law-shared-$environment"
 $containerAppsEnvironmentName = "aca-env-$environment"
+$uamiApiName = "uami-api-$environment"
 $containerAppName = "api-$environment"
-$containerImage = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+$containerImage = "acrcalmstonedev.azurecr.io/api:0.1.0"
+$containerRevision = "0-1-0-ai"
 $acrName = "acrcalmstone$environment"
 $appInsightsName = "appi-$environment"
 
@@ -40,7 +42,7 @@ az group create `
   --location $location `
   --output none
 
-# -------- Deployment --------
+# -------- Platform CD --------
 az deployment group create `
   --name $deploymentName `
   --resource-group $rg `
@@ -48,9 +50,12 @@ az deployment group create `
   --parameters `
       location=$location `
       logAnalyticsWorkspaceName=$logAnalyticsWorkspaceName `
+      appInsightsName=$appInsightsName `
+      uamiApiName=$uamiApiName `
+      acrName=$acrName `
       containerAppsEnvironmentName=$containerAppsEnvironmentName `
       containerAppName=$containerAppName `
       containerImage=$containerImage `
-      acrName=$acrName `
-      appInsightsName=$appInsightsName `
+      containerRevision=$containerRevision `
   --output none
+
