@@ -26,7 +26,10 @@ param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-hellowo
 param containerRevision string = '0-1-0'
 
 @description('Cosmos DB account name')
-param cosmosAccountName string = 'cosmos-dev'
+param cosmosAccountName string = 'cosmoscalmstone-dev'
+
+@description('Cosmos SQL database name')
+param databaseName string = 'calmstone-dev'
 
 module logAnalytics './modules/loganalytics.bicep' = {
   name: 'logAnalytics'
@@ -113,5 +116,13 @@ module cosmosAccount './modules/cosmos-account.bicep' = {
   params: {
     location: location
     cosmosAccountName: cosmosAccountName
+  }
+}
+
+module cosmosDatabaseOnboard './modules/cosmos-database-onboard.bicep' = {
+  name: 'cosmosDatabaseOnboard'
+  params: {
+    cosmosAccountName: cosmosAccount.outputs.cosmosAccountName
+    databaseName: databaseName
   }
 }

@@ -32,6 +32,7 @@ $containerAppName = "api-$environment"
 $containerImage = "acrcalmstonedev.azurecr.io/api:0.1.0"
 $containerRevision = "0-1-0-ai"
 $cosmosAccountName = "cosmoscalmstone-$environment"
+$databaseName = "calmstone-$environment"
 
 # -------- Azure Login --------
 az login --tenant $tenantId | Out-Null
@@ -59,4 +60,5 @@ az deployment group create `
       containerImage=$containerImage `
       containerRevision=$containerRevision `
       cosmosAccountName=$cosmosAccountName `
+      databaseName=$databaseName `
   --output none
