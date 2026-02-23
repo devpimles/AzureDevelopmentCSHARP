@@ -25,6 +25,9 @@ param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-hellowo
 @description('Container revision')
 param containerRevision string = '0-1-0'
 
+@description('Cosmos DB account name')
+param cosmosAccountName string = 'cosmos-dev'
+
 module logAnalytics './modules/loganalytics.bicep' = {
   name: 'logAnalytics'
   params: {
@@ -102,5 +105,13 @@ module containerAppApi './modules/containerapp-api.bicep' = {
     acrLoginServer: acr.outputs.acrLoginServer
     appInsightsConnectionString: appInsights.outputs.appInsightsConnectionString
     containerRevision: containerRevision
+  }
+}
+
+module cosmosAccount './modules/cosmos-account.bicep' = {
+  name: 'cosmosAccount'
+  params: {
+    location: location
+    cosmosAccountName: cosmosAccountName
   }
 }

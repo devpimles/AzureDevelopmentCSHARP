@@ -24,13 +24,14 @@ $deploymentName = "deploy-$environment-$timeStamp"
 
 # Parameters
 $logAnalyticsWorkspaceName = "law-shared-$environment"
-$containerAppsEnvironmentName = "aca-env-$environment"
+$appInsightsName = "appi-$environment"
 $uamiApiName = "uami-api-$environment"
+$acrName = "acrcalmstone$environment"
+$containerAppsEnvironmentName = "aca-env-$environment"
 $containerAppName = "api-$environment"
 $containerImage = "acrcalmstonedev.azurecr.io/api:0.1.0"
 $containerRevision = "0-1-0-ai"
-$acrName = "acrcalmstone$environment"
-$appInsightsName = "appi-$environment"
+$cosmosAccountName = "cosmoscalmstone-$environment"
 
 # -------- Azure Login --------
 az login --tenant $tenantId | Out-Null
@@ -57,5 +58,5 @@ az deployment group create `
       containerAppName=$containerAppName `
       containerImage=$containerImage `
       containerRevision=$containerRevision `
+      cosmosAccountName=$cosmosAccountName `
   --output none
-
