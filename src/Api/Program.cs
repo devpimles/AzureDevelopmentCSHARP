@@ -1,13 +1,18 @@
+using Api.Middleware.MultiTenancy;
+
 var builder = WebApplication.CreateBuilder(args);
 
 Console.WriteLine(builder.Configuration["ApplicationInsights:ConnectionString"]);
 builder.Services.AddApplicationInsightsTelemetry();
-// Add services to the container.
 
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Multi-tenancy services.
+builder.Services.AddScoped<ITenantContextAccessor, TenantContextAccessor>();
+builder.Services.AddScoped<TenantResolutionMiddleware>();
 
 var app = builder.Build();
 
@@ -21,6 +26,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<TenantResolutionMiddleware>(); // Before controllers to ensure tenant context is available
 
 app.MapControllers();
 
