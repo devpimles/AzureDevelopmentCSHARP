@@ -1,7 +1,7 @@
 ﻿using CalmStone.Core.Enums;
 using System.Collections.Generic;
 
-namespace CalmStone.Models.Onboarding
+namespace CalmStone.Core.Onboarding
 {
     public class Membership: OnboardingDocument
     {

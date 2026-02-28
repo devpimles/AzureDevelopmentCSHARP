@@ -1,5 +1,6 @@
-using Api.Data;
 using Api.Middleware.MultiTenancy;
+using CalmStone.Application;
+using CalmStone.Infrastructure;
 using Microsoft.Azure.Cosmos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ITenantContextAccessor, TenantContextAccessor>();
 builder.Services.AddScoped<TenantResolutionMiddleware>();
-builder.Services.AddScoped<NoteRepository>();
+
+// Application + Infrastructure layers
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 

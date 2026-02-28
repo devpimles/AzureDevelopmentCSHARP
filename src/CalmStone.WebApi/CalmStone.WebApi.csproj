@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CalmStone.Models\CalmStone.Core.csproj" />
     <ProjectReference Include="..\CalmStone.Services\CalmStone.Application.csproj" />
+    <ProjectReference Include="..\CalmStone.Infrastructure\CalmStone.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

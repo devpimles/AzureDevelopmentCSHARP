@@ -1,4 +1,6 @@
-﻿using CalmStone.Models.Onboarding;
+﻿using CalmStone.Application.Onboarding.Interfaces;
+using CalmStone.Application.Onboarding.Queries;
+using CalmStone.Core.Onboarding;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +9,8 @@ namespace CalmStone.Application.Onboarding.Services
 {
     public class TenantService : ITenantService
     {
+        private readonly ITenantRepository _tenantRepository;
+
         private static readonly List<Tenant> _tenants = new()
         {
             new Tenant
@@ -29,24 +33,26 @@ namespace CalmStone.Application.Onboarding.Services
             }
         };
 
-        public Task<IReadOnlyList<Tenant>> GetAllAsync()
+        public TenantService(ITenantRepository tenantRepository)
         {
-            return Task.FromResult((IReadOnlyList<Tenant>)_tenants.ToList());
+            _tenantRepository = tenantRepository;
         }
+
+        public Task<IReadOnlyList<TenantSummary>> GetTenantSummariesAsync(CancellationToken cancellationToken)
+            => _tenantRepository.GetTenantSummariesAsync(cancellationToken);
+
+        public Task<IReadOnlyList<Tenant>> GetAllAsync()
+            => Task.FromResult((IReadOnlyList<Tenant>)_tenants.ToList());
 
         public Task<Tenant?> GetAsync(string tenantId)
         {
-            var tenant = _tenants
-                .FirstOrDefault(t => t.TenantId == tenantId);
-
+            var tenant = _tenants.FirstOrDefault(t => t.TenantId == tenantId);
             return Task.FromResult(tenant);
         }
 
         public Task<bool> TenantExistsAsync(string tenantId)
         {
-            var exists = _tenants
-                .Any(t => t.TenantId == tenantId);
-
+            var exists = _tenants.Any(t => t.TenantId == tenantId);
             return Task.FromResult(exists);
         }
 
@@ -54,17 +60,13 @@ namespace CalmStone.Application.Onboarding.Services
         {
             tenant.Id ??= tenant.TenantId;
             tenant.CreatedUtc = DateTime.UtcNow;
-
             _tenants.Add(tenant);
-
             return Task.FromResult(tenant.TenantId);
         }
 
         public Task UpdateAsync(Tenant tenant)
         {
-            var existing = _tenants
-                .FirstOrDefault(t => t.TenantId == tenant.TenantId);
-
+            var existing = _tenants.FirstOrDefault(t => t.TenantId == tenant.TenantId);
             if (existing != null)
             {
                 existing.Name = tenant.Name;
@@ -72,20 +74,13 @@ namespace CalmStone.Application.Onboarding.Services
                 existing.Status = tenant.Status;
                 existing.ModifiedUtc = DateTime.UtcNow;
             }
-
             return Task.CompletedTask;
         }
 
         public Task DeleteAsync(string tenantId)
         {
-            var tenant = _tenants
-                .FirstOrDefault(t => t.TenantId == tenantId);
-
-            if (tenant != null)
-            {
-                _tenants.Remove(tenant);
-            }
-
+            var tenant = _tenants.FirstOrDefault(t => t.TenantId == tenantId);
+            if (tenant != null) _tenants.Remove(tenant);
             return Task.CompletedTask;
         }
     }

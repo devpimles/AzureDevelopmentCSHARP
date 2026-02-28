@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CalmStone.Models\CalmStone.Core.csproj" />
+    <ProjectReference Include="..\CalmStone.Services\CalmStone.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Persistence\Cosmos\" />
-    <Folder Include="Persistence\Repositories\" />
   </ItemGroup>
 
 </Project>

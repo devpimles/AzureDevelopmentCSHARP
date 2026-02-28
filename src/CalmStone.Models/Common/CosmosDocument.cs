@@ -1,4 +1,4 @@
-﻿namespace CalmStone.Models.Common
+﻿namespace CalmStone.Core.Common
 {
     public abstract class CosmosDocument
     {

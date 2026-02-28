@@ -2,8 +2,9 @@
 {
     public class TenantOwnerInfoDto
     {
-        public string Provider { get; set; } = default!;
         public string Email { get; set; } = default!;
-        public string? DisplayName { get; set; }
+        public string Provider { get; set; } = default!;
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 }

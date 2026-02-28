@@ -1,7 +1,7 @@
 ﻿using CalmStone.Core.Enums;
-using CalmStone.Models.Common;
+using CalmStone.Core.Common;
 
-namespace CalmStone.Models.Onboarding
+namespace CalmStone.Core.Onboarding
 {
     public abstract class OnboardingDocument: CosmosDocument
     {

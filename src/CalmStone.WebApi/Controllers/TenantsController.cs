@@ -1,8 +1,6 @@
-﻿using Api.Controllers;
-using Api.Middleware.MultiTenancy;
-using CalmStone.Models.Onboarding;
-using CalmStone.Services.Onboarding;
-using Microsoft.AspNetCore.Http;
+﻿using CalmStone.Application.Onboarding.Services;
+using CalmStone.WebApi.Dtos.Onboarding.Responses;
+using CalmStone.WebApi.Mapping.Onboarding;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalmStone.WebApi.Controllers
@@ -11,34 +9,23 @@ namespace CalmStone.WebApi.Controllers
     [ApiController]
     public class TenantsController : ControllerBase
     {
-        private readonly ILogger<TenantsController> _logger;
+        private readonly ITenantService _tenantService;
 
-        public TenantsController(ILogger<TenantsController> logger)
+        public TenantsController(ITenantService tenantService)
         {
-            _logger = logger;
+            _tenantService = tenantService;
         }
 
-        [HttpGet]
-        [AllowAnonymousTenant]
-        public async Task<IReadOnlyList<Tenant>> GetAllTenants()
+        /// <summary>
+        /// GET /api/tenants/summary
+        /// Returns a summary of all tenants with their owner information.
+        /// </summary>
+        [HttpGet("summary")]
+        public async Task<ActionResult<IReadOnlyList<TenantDto>>> GetSummary(CancellationToken cancellationToken)
         {
-            var tenants = await new TenantService().GetAllAsync();
-            return await new TenantService().GetAllAsync();
+            var summaries = await _tenantService.GetTenantSummariesAsync(cancellationToken);
+            var result = summaries.Select(s => s.ToDto()).ToList();
+            return Ok(result);
         }
-
-        //[HttpGet]
-        //[AllowAnonymousTenant]
-        //public IActionResult Get()
-        //{
-        //    _logger.LogWarning("HealthController WARNING");
-        //    _logger.LogInformation("HealthController endpoint called.");
-
-        //    return Ok(new
-        //    {
-        //        status = "ok",
-        //        service = "api",
-        //        timestamp = DateTime.UtcNow
-        //    });
-        //}
     }
 }

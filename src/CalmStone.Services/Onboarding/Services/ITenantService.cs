@@ -1,4 +1,6 @@
-﻿using CalmStone.Models.Onboarding;
+﻿using CalmStone.Application.Onboarding.Queries;
+using CalmStone.Core.Onboarding;
+
 
 namespace CalmStone.Application.Onboarding.Services
 {
@@ -15,5 +17,7 @@ namespace CalmStone.Application.Onboarding.Services
         Task UpdateAsync(Tenant tenant);
 
         Task DeleteAsync(string tenantId);
+
+        Task<IReadOnlyList<TenantSummary>> GetTenantSummariesAsync(CancellationToken cancellationToken);
     }
 }

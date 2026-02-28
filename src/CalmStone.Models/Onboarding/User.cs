@@ -1,4 +1,4 @@
-﻿namespace CalmStone.Models.Onboarding
+﻿namespace CalmStone.Core.Onboarding
 {
     /// <summary>
     /// Represents a CalmStone platform user.

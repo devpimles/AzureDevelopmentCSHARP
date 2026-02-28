@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace CalmStone.Application.Onboarding.Queries
 {
-    internal class TenantSummary
+    public class TenantSummary
     {
+        public string TenantId { get; init; } = default!;
+        public string Name { get; init; } = default!;
+        public string Plan { get; init; } = default!;
+        public string Status { get; init; } = default!;
+        public string OwnerEmail { get; init; } = default!;
+        public string OwnerProvider { get; init; } = default!;
+        public string? OwnerFirstName { get; init; }
+        public string? OwnerLastName { get; init; }
     }
 }
