@@ -5,9 +5,9 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalmStone.WebApi", "CalmStone.WebApi\CalmStone.WebApi.csproj", "{CD736EF0-B4BF-4383-A9F9-317243C66F35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalmStone.Core", "CalmStone.Models\CalmStone.Core.csproj", "{68814183-0631-4B7F-90E7-C3E71177024C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalmStone.Core", "CalmStone.Core\CalmStone.Core.csproj", "{68814183-0631-4B7F-90E7-C3E71177024C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalmStone.Application", "CalmStone.Services\CalmStone.Application.csproj", "{3FBDC005-0DC7-443A-8E90-3FAD63DD5A52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalmStone.Application", "CalmStone.Application\CalmStone.Application.csproj", "{3FBDC005-0DC7-443A-8E90-3FAD63DD5A52}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalmStone.Infrastructure", "CalmStone.Infrastructure\CalmStone.Infrastructure.csproj", "{238A0E94-9130-4B53-A8C6-156D7C59F3F6}"
 EndProject

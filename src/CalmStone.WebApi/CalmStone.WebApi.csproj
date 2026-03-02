@@ -11,20 +11,19 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.57.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CalmStone.Models\CalmStone.Core.csproj" />
-    <ProjectReference Include="..\CalmStone.Services\CalmStone.Application.csproj" />
-    <ProjectReference Include="..\CalmStone.Infrastructure\CalmStone.Infrastructure.csproj" />
+    <Folder Include="Filters\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Filters\" />
+    <ProjectReference Include="..\CalmStone.Application\CalmStone.Application.csproj" />
+    <ProjectReference Include="..\CalmStone.Core\CalmStone.Core.csproj" />
+    <ProjectReference Include="..\CalmStone.Infrastructure\CalmStone.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
