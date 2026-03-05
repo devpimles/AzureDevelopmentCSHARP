@@ -17,7 +17,7 @@ namespace CalmStone.Infrastructure
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-            services.AddSingleton(sp =>
+            services.AddSingleton<CosmosClient>(sp =>
             {
                 var options = sp.GetRequiredService<IOptions<CosmosOptions>>().Value;
 
@@ -32,24 +32,23 @@ namespace CalmStone.Infrastructure
 
                 if (!string.IsNullOrWhiteSpace(options.ApplicationRegion))
                     clientOptions.ApplicationRegion = options.ApplicationRegion;
-                else if (options.PreferredRegions.Count > 0)
+                else if (options.PreferredRegions.Count != 0)
                     clientOptions.ApplicationPreferredRegions = options.PreferredRegions;
 
-                var containers = options.WarmupContainers
+                var warmup = options.WarmupContainers
                     .Select(c => (options.DatabaseName, c))
                     .ToList();
 
-                return containers.Count > 0
-                    ? CosmosClient.CreateAndInitializeAsync(
-                        options.AccountEndpoint,
-                        options.AccountKey,
-                        containers,
-                        clientOptions)
-                      .GetAwaiter().GetResult()
-                    : new CosmosClient(
-                        options.AccountEndpoint,
-                        options.AccountKey,
-                        clientOptions);
+                if (warmup.Count > 0)
+                {
+                    return CosmosClient.CreateAndInitializeAsync(
+                        options.ConnectionString,
+                        warmup,
+                        clientOptions
+                    ).GetAwaiter().GetResult();
+                }
+
+                return new CosmosClient(options.ConnectionString, clientOptions);
             });
 
             services.AddSingleton<ICosmosContainerFactory, CosmosContainerFactory>();

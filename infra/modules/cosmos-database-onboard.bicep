@@ -20,14 +20,14 @@ resource sqlDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2024-05
 
 resource sqlContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2024-05-15' = {
   parent: sqlDatabase
-  name: 'onboard'
+  name: 'onboarding'
   properties: {
     resource: {
-      id: 'onboard'
+      id: 'onboarding'
 
       partitionKey: {
         paths: [
-          '/tenantId'
+          '/partitionKey'
         ]
         kind: 'Hash'
       }

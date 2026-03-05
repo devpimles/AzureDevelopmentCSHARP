@@ -1,8 +1,19 @@
 using Api.Middleware.MultiTenancy;
 using CalmStone.Application;
 using CalmStone.Infrastructure;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllers();
