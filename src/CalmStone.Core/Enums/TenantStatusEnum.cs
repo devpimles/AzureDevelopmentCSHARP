@@ -5,9 +5,7 @@ namespace CalmStone.Core.Enums
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TenantStatusEnum
     {
-        Owner,
-        Admin,
-        Member,
-        Viewer
+        Active,
+        Inactive
     }
 }

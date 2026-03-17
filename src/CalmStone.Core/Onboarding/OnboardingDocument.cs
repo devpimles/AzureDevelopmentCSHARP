@@ -1,4 +1,5 @@
 ﻿using CalmStone.Core.Common.Persistence;
+using CalmStone.Core.Enums;
 
 namespace CalmStone.Core.Onboarding
 {
@@ -16,5 +17,9 @@ namespace CalmStone.Core.Onboarding
         /// Domain-friendly alias.
         /// </summary>
         public string TenantId => PartitionKey;
+
+
+        public OnboardingEntityTypeEnum Type { get; set; }
+
     }
 }

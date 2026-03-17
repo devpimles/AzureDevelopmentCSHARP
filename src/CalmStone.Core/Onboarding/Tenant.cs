@@ -1,4 +1,6 @@
-﻿namespace CalmStone.Core.Onboarding
+﻿using CalmStone.Core.Enums;
+
+namespace CalmStone.Core.Onboarding
 {
     public sealed class Tenant : OnboardingDocument
     {
@@ -7,9 +9,9 @@
         }
 
         public string Name { get; set; } = default!;
-        public string Plan { get; set; } = default!;
-        public string Status { get; set; } = default!;
+        public string Description { get; set; } = default!;
+        public TenantPlanEnum Plan { get; set; } = default!;
+        public TenantStatusEnum Status { get; set; }
 
-        // TODO: The type ?
     }
 }

@@ -3,11 +3,10 @@
 namespace CalmStone.Core.Enums
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum RoleNameEnum
+    public enum TenantPlanEnum
     {
-        Viewer,
-        Member,
-        Admin,
-        Owner
+        Free,
+        Basic,
+        Premium
     }
 }

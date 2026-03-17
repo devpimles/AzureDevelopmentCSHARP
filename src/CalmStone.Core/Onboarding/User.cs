@@ -26,5 +26,6 @@
         public string? Locale { get; set; }
 
         public string? AvatarUrl { get; set; }
+
     }
 }

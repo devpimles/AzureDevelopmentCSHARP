@@ -11,7 +11,5 @@ namespace CalmStone.Core.Onboarding
 
         public string UserId { get; set; } = default!;
         public List<RoleNameEnum> Roles { get; set; } = [];
-
-        // TODO: The type ?
     }
 }

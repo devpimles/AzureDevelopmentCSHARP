@@ -11,26 +11,6 @@ namespace CalmStone.Application.Onboarding.Services
     {
         private readonly ITenantRepository _tenantRepository;
 
-        private static readonly List<Tenant> _tenants = new()
-        {
-            new Tenant("tenant-abc")
-            {
-                Id = "tenant-abc",
-                Name = "Acme Corp",
-                Plan = "pro",
-                Status = "active",
-                CreatedUtc = DateTime.UtcNow.AddDays(-10)
-            },
-            new Tenant("tenant-beta")
-            {
-                Id = "tenant-beta",
-                Name = "Beta Industries",
-                Plan = "free",
-                Status = "active",
-                CreatedUtc = DateTime.UtcNow.AddDays(-5)
-            }
-        };
-
         public TenantService(ITenantRepository tenantRepository)
         {
             _tenantRepository = tenantRepository;
