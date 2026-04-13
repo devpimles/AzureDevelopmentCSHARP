@@ -1,27 +1,45 @@
-# Resources
+# Azure API Management Infrastructure
 
-- Log Analytics Workspace
-- Application Insights (other)
+This folder contains the Bicep files and PowerShell deployment script for the API Management module.
 
-## Log Analytics Workspace
+## Resources Deployed
 
-- Free
+- Azure API Management
+- Supporting API-related configuration through Bicep modules
 
-## Application Insights
+## Files
 
-Common best practice:
+```text
+infra/
+|-- README.md
+|-- deploy.ps1
+|-- main.bicep
+|-- main.dev.bicepparam
+`-- modules/
+    |-- apim.bicep
+    `-- inference-api.bicep
+```
 
-- One App Insights per microservice
-- One App Insights per distinct component
-- One App Insights per environment (dev/test/prod)
+## Deployment Style
 
-Example structure:
+This module uses:
 
-Component           |	App Insights        |   LAW         |
-|-------------------|-----------------------|---------------|
-Web API             |   ai-api-dev          |	law-dev     |
-Background worker   |   ai-worker-dev       |   law-dev     |
-Frontend SPA        |   ai-frontend-dev     |   law-dev     |
-Container App       |   ai-container-dev    |   law-dev     |
+- `main.bicep` as the entry-point template
+- `main.dev.bicepparam` for environment-specific values
+- `deploy.ps1` as the PowerShell orchestrator
 
-- [FAQ Application Insights](https://docs.azure.cn/en-us/azure-monitor/app/application-insights-faq)
+The script reads values from `.env`, signs in with Azure CLI, creates the resource group, and currently runs the deployment in `--what-if` mode.
+
+## Quick Start
+
+1. Create or update `.env` in this folder with the values expected by `deploy.ps1`.
+2. From this folder, run:
+
+```powershell
+.\deploy.ps1
+```
+
+## Notes
+
+- Because the script currently uses `--what-if`, it is especially useful for validating the resource plan before a real deployment.
+- The next natural improvement for this README would be listing the exact `.env` keys expected by the script.

@@ -1,92 +1,81 @@
-# Azure Service Bus - Messaging Features Demo 
+# Azure Service Bus Messaging Demo
 
-This repository demonstrates key Azure Service Bus messaging capabilities including topics, subscriptions, message routing with filters, queues, and common processing patterns using .NET 9. 
+This module demonstrates a small message-driven workflow on Azure Service Bus using .NET 9. It covers topics, subscriptions, SQL filters, queues, and chained processing stages while keeping the sample split into focused projects.
 
 [![Service Bus Diagram](SB-SB6.drawio.png)](SB-SB6.drawio.png)
 
-## Infrastructure Overview
+## What This Module Covers
 
-Provisioned resources (via ARM templates in `/infra`)
-For details on provisioning and configuring the required Azure resources, see the [infra/README.md](infra/README.md) file.
+- Topic-based publish/subscribe
+- Subscription filtering with custom message properties
+- Queue-based downstream processing
+- Shared infrastructure helpers for senders and processors
+- A separate infrastructure package in `infra`
 
-## A concise list of the Azure Service Bus features in this demo
+## Structure
 
-- Messaging entity: A resource in Service Bus (queue, topic, or subscription) where messages are stored and exchanged.
-- Topic: A publish/subscribe entity that allows one message to be sent and delivered to multiple subscribers.
-- Subscription: A named, persistent view of a topic that receives a copy of published messages, optionally filtered.
-- Queue: A first-in, first-out (FIFO) entity for point-to-point messaging between one producer and one consumer.
-- Subscription Rule: A condition attached to a subscription that defines which messages it should receive.
-- User property: A custom key/value pair on a message that can be used for filtering and routing.
-- SQL Filter: An expression using SQL-like syntax to filter messages by system or user properties.
-- Routing: The process of directing messages from topics to subscriptions based on filters and rules.
-- Authorization Rule: A policy that defines access rights (send, listen, manage) to a messaging entity.
+```text
+Azr.SvcBus.Msging/
+|-- README.md
+|-- Azr.SvcBus.Msging.sln
+|-- src/
+|   |-- Common/
+|   |-- FileSender/
+|   |-- PdfFileProcessor/
+|   |-- TxtFileProcessor/
+|   `-- ChunkEmbedder/
+`-- infra/
+    |-- README.md
+    |-- azuredeploy.json
+    |-- azuredeploy.parameters.json
+    `-- deploy_template.sh
+```
 
-## Projects Overview
+## Project Guide
 
-### Common project 
+### Common
 
-The Common project in this demo serves as a shared library that encapsulates reusable infrastructure and messaging logic for working with Azure Service Bus in .NET 9. 
-It provides abstractions and utility classes such as ServiceBusClientFactory, which manages the lifecycle and caching of Service Bus clients, senders, and processors. 
-Defines generic publisher and processor wrappers (ServiceBusPublisher<T> and ServiceBusProcessorWrapper<T>) that abstract away the low-level details of message serialization, sending, and processing. 
-These wrappers enable application code to focus on business logic rather than messaging boilerplate. 
+Shared abstractions for Service Bus operations, including reusable client, publisher, and processor helpers.
 
-### FileSender project 
-The FileSender project demonstrates an approach to publishing messages to Azure Service Bus topics. 
-The project leverages the ServiceBusClientFactory from the shared Common library to manage the creation and reuse of Service Bus senders.
-When sending messages, FileSender constructs strongly-typed FileMessage objects representing files to be processed, serializes them to JSON, and attaches a custom fileType property to each message. 
-The fileType property enables downstream consumers to filter and route messages based on file type (e.g., "pdf" or "txt"). 
-Send messages to `file-topic`.
+### FileSender
 
-### PdfFileProcessor project 
+Publishes `FileMessage` payloads to `file-topic` and sets the `fileType` property so subscriptions can route the messages.
 
-The PdfFileProcessor project illustrates consuming and processing messages from an Azure Service Bus subscription. 
-The processor uses the ServiceBusProcessorWrapper<FileMessage> from the shared Common library to abstract away the complexity of message handling, error management, and resource cleanup.
-When a PDF file message arrives (filtered by the subscription), the processor logs the file being processed and simulates chunking the file into smaller parts. 
-For each chunk, it creates a ChunkMessage and sends it to a downstream queue for further processing. 
-This design demonstrates decoupling message processing stages, handling errors, and maintaining scalability.
-Consume messages of Subscription `PdfFileReceiver` processes messages (filter: `fileType = 'pdf'`) and sends messages to Queue `chunk-queue`.
+### PdfFileProcessor
 
-### TxtFileProcessor project 
+Consumes from the PDF-focused subscription, simulates chunking, and forwards chunk messages to `chunk-queue`.
 
-The TxtFileProcessor project exists to demonsrates routing in ServiceBus.
-Consume messages of Subscription `TxtFileReceiver` processes messages (filter: `fileType = 'txt'`) and sends messages to Queue `chunk-queue`.
+### TxtFileProcessor
 
-### ChunkEmbedder project 
+Consumes from the TXT-focused subscription and demonstrates filtered routing behavior.
 
-The ChunkEmbedder project demonstrates for consuming messages from an Azure Service Bus queue and processing them in a stateless, event-driven manner. 
-Using the ServiceBusProcessorWrapper<ChunkMessage> from the shared Common library.
-When a chunk message arrives in the queue, the processor logs the chunk index and file ID, simulating the processing or embedding of each chunk. 
-The application uses a short idle timeout to determine when to gracefully shut down if no new messages are received, which is useful for batch or demo scenarios. 
-This approach highlights point-to-point message processing in distributed systems.
+### ChunkEmbedder
 
-## Architecture Flow 
+Consumes chunk messages from the queue and simulates the next processing stage.
 
-1. **Publisher** sends messages to `file-topic` with a property `fileType` (e.g., `txt` or `pdf`).  
-2. **Subscriptions** apply filters and receive only relevant messages.  
-3. **Receivers** process subscription messages.  
-4. **Queue processing**: Processed chunks are sent to `chunk-queue` for downstream handling.  
+## End-to-End Flow
 
-## Prerequisites
+1. `FileSender` publishes messages to `file-topic`.
+2. Subscriptions filter by `fileType`.
+3. The processors handle only the messages intended for them.
+4. Processed chunks are pushed to `chunk-queue`.
+5. `ChunkEmbedder` consumes the queue messages.
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)  
-- [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)  
-- Azure subscription  
-- PowerShell or Bash  
+## Running the Demo
 
-### Run the demo
+1. Provision the Service Bus resources using [infra/README.md](infra/README.md).
+2. Configure the connection string for the projects that need it.
+3. Run the projects in this order:
 
-Configure your app with the Service Bus connection string.
-
-Run the respective projects in the following order:
+```text
 1. FileSender
 2. PdfFileProcessor
 3. TxtFileProcessor
 4. ChunkEmbedder
-
-Verify that messages are routed correctly and processed through subscriptions and queues.
+```
 
 ## Additional Resources
 
-- [Azure Service Bus Documentation](https://learn.microsoft.com/azure/service-bus-messaging/)
-- [Message Filters](https://learn.microsoft.com/azure/service-bus-messaging/topic-filters)
-- [.NET Service Bus SDK](https://learn.microsoft.com/dotnet/api/overview/azure/messaging.servicebus-readme)
+- [Azure Service Bus documentation](https://learn.microsoft.com/azure/service-bus-messaging/)
+- [Topic filters and actions](https://learn.microsoft.com/azure/service-bus-messaging/topic-filters)
+- [.NET Service Bus SDK overview](https://learn.microsoft.com/dotnet/api/overview/azure/messaging.servicebus-readme)
